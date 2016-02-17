@@ -1,0 +1,8 @@
+CC = clang
+OPTIONS = -std=c11 -Os
+WARNINGS = -Weverything -pedantic
+COMPILE = $(CC) $(OPTIONS) $(WARNINGS) -c
+LINK = $(CC)
+
+: foreach src/*.c |> ^ CC %f^ $(COMPILE) %f -o %o |> build/%B.o
+: build/*.o |> ^ Linking binary "chaos"^ $(LINK) %f -o %o |> bin/chaos
