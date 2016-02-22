@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 		.b = 0,
 		.cx = 0,
 		.cy = 0,
+		.escape = 2,
 		.scale = 1,
 		.iterations = 1,
 		.width = 500,
@@ -59,6 +60,11 @@ int main(int argc, char **argv) {
 			break;
 		case 's':
 			if (!parse_double(&params.scale, optarg)) {
+				return 1;
+			}
+			break;
+		case 'e':
+			if (!parse_double(&params.escape, optarg)) {
 				return 1;
 			}
 			break;

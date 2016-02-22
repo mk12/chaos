@@ -3,6 +3,7 @@
 #include "plot.h"
 
 #include "fractal.h"
+#include "util.h"
 
 #include <stdlib.h>
 

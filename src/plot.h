@@ -9,6 +9,7 @@ struct Parameters {
 	double a, b;        // complex constant c (only used by Julia)
 	double cx, cy;      // centre of the viewport
 	double scale;       // scale factor
+	double escape;      // ...
 	int iterations;     // number of iterations
 	int width, height;  // image dimensions, in pixels
 	const char *ofile;  // output filename
