@@ -1,7 +1,8 @@
 CC = clang
 OPTIONS = -std=c11 -Os
 WARNINGS = -Weverything -pedantic
-COMPILE = $(CC) $(OPTIONS) $(WARNINGS) -c
+NOWARNINGS = -Wno-padded
+COMPILE = $(CC) $(OPTIONS) $(WARNINGS) $(NOWARNINGS) -c
 LINK = $(CC)
 
 : foreach src/*.c |> ^ CC %f^ $(COMPILE) %f -o %o |> build/%B.o

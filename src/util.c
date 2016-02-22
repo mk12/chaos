@@ -2,6 +2,7 @@
 
 #include "util.h"
 
+#include <stdarg.h>
 #include <stdlib.h>
 
 // The name of the program.
@@ -16,9 +17,11 @@ void setup_util(const char *p, const char *u) {
 }
 
 void print_usage(FILE *out) {
-	fprintf(out, "usage: %s %s\n", program_name, usage_message);
+	fprintf(out, "usage: %s %s\n", program_name, usage_msg);
 }
 
+void printf_error(const char *format, ...)
+	__attribute__((__format__ (__printf__, 1, 2)));
 void printf_error(const char *format, ...) {
 	va_list args;
 	va_start(args, format);

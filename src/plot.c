@@ -4,7 +4,9 @@
 
 #include "fractal.h"
 
-// Looks up a fractal function by name. Returns NULL if it can't be found.
+#include <stdlib.h>
+
+// Looks up a fractal function by name. Returns NULL if it cannot be found.
 static FractalFn lookup_fractal(char name) {
 	switch (name) {
 	case 'j':
@@ -18,9 +20,9 @@ static FractalFn lookup_fractal(char name) {
 	}
 }
 
-int plot(const struct *Parameters params) {
-	SetMemberFun member = lookup_fractal(params->name);
-	if (!member) {
+int plot(const struct Parameters *params) {
+	FractalFn in_fractal = lookup_fractal(params->name);
+	if (!in_fractal) {
 		printf_error("%c: invalid fractal name", params->name);
 		return 1;
 	}

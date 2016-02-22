@@ -8,8 +8,8 @@
 
 // The usage message for the program.
 static const char *usage_msg =
-	"[-n name] [-x origin_x] [-y origin_y] [-s scale] [-i iterations]"
-	" [-w width] [-h height] [-o file] [c]";
+	"[-n name] [-a A] [-b B] [-x centre_x] [-y centre_y] [-s scale]"
+	" [-i iterations] [-w width] [-h height] [-o file]";
 
 int main(int argc, char **argv) {
 	setup_util(argv[0], usage_msg);
@@ -17,28 +17,35 @@ int main(int argc, char **argv) {
 	// Initialize the default parameters.
 	struct Parameters params = {
 		.name = 'j',
+		.a = 0,
+		.b = 0,
 		.cx = 0,
 		.cy = 0,
 		.scale = 1,
 		.iterations = 1,
 		.width = 500,
 		.height = 500,
-		.ofile = "chaos.ppm",
-		.n_args = 0,
-		.args = NULL
+		.ofile = "chaos.ppm"
 	};
 
 	// Get command line options.
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "hn:x:y:s:i:w:h:o:")) != -1) {
+	while ((c = getopt(argc, argv, "n:x:y:s:i:w:h:o:")) != -1) {
 		switch (c) {
-		case 'h':
-			print_usage(stdout);
-			return 0;
 		case 'n':
 			params.name = *optarg;
+			break;
+		case 'a':
+			if (!parse_double(&params.a, optarg)) {
+				return 1;
+			}
+			break;
+		case 'b':
+			if (!parse_double(&params.b, optarg)) {
+				return 1;
+			}
 			break;
 		case 'x':
 			if (!parse_double(&params.cx, optarg)) {
@@ -78,7 +85,11 @@ int main(int argc, char **argv) {
 			return 1;
 		}
 	}
-	params.n_args = argc - optind;
-	params.args = argv + optind;
-	return plot(params);
+	// Make sure all arguments were processed.
+	if (optind != argc) {
+		print_usage(stderr);
+		return 1;
+	}
+
+	return plot(&params);
 }
