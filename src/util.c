@@ -27,6 +27,7 @@ void printf_error(const char *format, ...) {
 	va_start(args, format);
 	fprintf(stderr, "%s: ", program_name);
 	vfprintf(stderr, format, args);
+	putc('\n', stderr);
 	va_end(args);
 }
 

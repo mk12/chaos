@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "n:x:y:s:i:w:h:o:")) != -1) {
+	while ((c = getopt(argc, argv, "n:a:b:x:y:s:i:w:h:o:")) != -1) {
 		switch (c) {
 		case 'n':
 			params.name = *optarg;
@@ -66,14 +66,26 @@ int main(int argc, char **argv) {
 			if (!parse_int(&params.iterations, optarg)) {
 				return 1;
 			}
+			if (params.iterations <= 0) {
+				printf_error("%s: iterations must be positive", optarg);
+				return 1;
+			}
 			break;
 		case 'w':
 			if (!parse_int(&params.width, optarg)) {
 				return 1;
 			}
+			if (params.width <= 0) {
+				printf_error("%s: width must be positive", optarg);
+				return 1;
+			}
 			break;
 		case 'h':
 			if (!parse_int(&params.height, optarg)) {
+				return 1;
+			}
+			if (params.height <= 0) {
+				printf_error("%s: height must be positive", optarg);
 				return 1;
 			}
 			break;
