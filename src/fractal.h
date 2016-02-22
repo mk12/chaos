@@ -14,9 +14,9 @@ typedef bool (*FractalFn)(complex double, int, complex double);
 bool julia(complex double z, int iterations, complex double c);
 
 // Returns true if 'z' is in the Mandelbrot set.
-bool mandelbrot(complex double z, int iterations, complex double);
+bool mandelbrot(complex double c, int iterations, complex double);
 
 // Returns true if 'z' is in the Tricorn set.
-bool tricorn(complex double z, int iterations, complex double);
+bool tricorn(complex double c, int iterations, complex double);
 
 #endif
