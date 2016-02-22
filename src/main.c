@@ -1,83 +1,84 @@
 // Copyright 2016 Mitchell Kember. Subject to the MIT License.
 
+#include "plot.h"
+#include "util.h"
+
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
-// String constants.
-static const char *prog_name; // set in main
-static const char *const usage_msg =
-	"usage: chaos [-a A] [-b B] [-s size] [-o file]\n";
-
-// Default parameter values.
-static const double default_a = -0.687;
-static const double default_b = 0.312;
-static const int default_size = 500;
-static const char *default_ofile = "chaos.ppm";
-
-// Parse a string as an int. Exits on failure.
-static int parse_int(const char *str) {
-	char *end;
-	int n = (int)strtol(str, &end, 0);
-	if (*end) {
-		fprintf(stderr, "%s: %s: not an integer\n", prog_name, str);
-		exit(1);
-	}
-	return n;
-}
-
-// Parse a string as a double. Exits on failure.
-static double parse_double(const char *str) {
-	char *end;
-	double d = strtod(str, &end);
-	if (*end) {
-		fprintf(stderr, "%s: %s: not a number\n", prog_name, str);
-		exit(1);
-	}
-	return d;
-}
+// The usage message for the program.
+static const char *usage_msg =
+	"[-n name] [-x origin_x] [-y origin_y] [-s scale] [-i iterations]"
+	" [-w width] [-h height] [-o file] [c]";
 
 int main(int argc, char **argv) {
-	// Set the program name to be used in error messages.
-	prog_name = argv[0];
+	setup_util(argv[0], usage_msg);
 
-	// Initialize parameters to default values.
-	double a = default_a;
-	double b = default_b;
-	int size = default_size;
-	const char *ofile = default_ofile;
+	// Initialize the default parameters.
+	struct Parameters params = {
+		.name = 'j',
+		.cx = 0,
+		.cy = 0,
+		.scale = 1,
+		.iterations = 1,
+		.width = 500,
+		.height = 500,
+		.ofile = "chaos.ppm",
+		.n_args = 0,
+		.args = NULL
+	};
 
 	// Get command line options.
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "ha:b:s:o:")) != -1) {
+	while ((c = getopt(argc, argv, "hn:x:y:s:i:w:h:o:")) != -1) {
 		switch (c) {
 		case 'h':
-			fputs(usage_msg, stdout);
+			print_usage(stdout);
 			return 0;
-		case 'a':
-			a = parse_double(optarg);
+		case 'n':
+			params.name = *optarg;
 			break;
-		case 'b':
-			b = parse_double(optarg);
+		case 'x':
+			if (!parse_double(&params.cx, optarg)) {
+				return 1;
+			}
+			break;
+		case 'y':
+			if (!parse_double(&params.cy, optarg)) {
+				return 1;
+			}
 			break;
 		case 's':
-			size = parse_int(optarg);
+			if (!parse_double(&params.scale, optarg)) {
+				return 1;
+			}
+			break;
+		case 'i':
+			if (!parse_int(&params.iterations, optarg)) {
+				return 1;
+			}
+			break;
+		case 'w':
+			if (!parse_int(&params.width, optarg)) {
+				return 1;
+			}
+			break;
+		case 'h':
+			if (!parse_int(&params.height, optarg)) {
+				return 1;
+			}
 			break;
 		case 'o':
-			ofile = optarg;
+			params.ofile = optarg;
 			break;
+		case '?':
+			print_usage(stderr);
+			return 1;
 		}
 	}
-	// Make sure all arguments were processed.
-	if (optind != argc) {
-		fputs(usage_msg, stderr);
-		return 1;
-	}
-
-	// Print the c-value.
-	printf("%f + %fi\n", a, b);
-	return 0;
+	params.n_args = argc - optind;
+	params.args = argv + optind;
+	return plot(params);
 }
