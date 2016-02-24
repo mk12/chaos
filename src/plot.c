@@ -40,5 +40,17 @@ int plot(const struct Parameters *params) {
 		printf_error("%c: invalid fractal name", params->name);
 		return 1;
 	}
+
+	complex double c = params->a + params->b * I;
+	for (int y = 0; y < params->height; y++) {
+		for (int x = 0; x < params->width; x++) {
+			complex double z = pixel_to_point(x, y, params);
+			if (in_fractal(z, c, params->escape, params->iterations)) {
+				// black
+			} else {
+				// white
+			}
+		}
+	}
 	return 0;
 }
