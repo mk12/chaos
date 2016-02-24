@@ -8,7 +8,7 @@
 
 // The usage message for the program.
 static const char *usage_msg =
-	"[-n name] [-a A] [-b B] [-x centre_x] [-y centre_y] [-s scale]"
+	"[-n name] [-a A] [-b B] [-x centre_x] [-y centre_y] [-s scale] [-e escape]"
 	" [-i iterations] [-w width] [-h height] [-o file]";
 
 int main(int argc, char **argv) {
@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
 		.b = 0,
 		.cx = 0,
 		.cy = 0,
-		.escape = 2,
 		.scale = 1,
+		.escape = 2,
 		.iterations = 1,
 		.width = 500,
 		.height = 500,
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "n:a:b:x:y:s:i:w:h:o:")) != -1) {
+	while ((c = getopt(argc, argv, "n:a:b:x:y:s:e:i:w:h:o:")) != -1) {
 		switch (c) {
 		case 'n':
 			params.name = *optarg;
