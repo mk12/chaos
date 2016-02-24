@@ -2,34 +2,34 @@
 
 #include "fractal.h"
 
-bool julia(complex double z, int iterations, complex double c) {
-	for (int i = 0; i < iterations; i++) {
+bool julia(complex double z, complex double c, double escape, int iters) {
+	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
-		if (cabs(z) > 2) {
+		if (cabs(z) > escape) {
 			return false;
 		}
 	}
 	return true;
 }
 
-bool mandelbrot(complex double c, int iterations, complex double arg) {
-	(void)arg;
+bool mandelbrot(complex double c, complex double a, double escape, int iters) {
+	(void)a;
 	complex double z = 0;
-	for (int i = 0; i < iterations; i++) {
+	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
-		if (cabs(z) > 2) {
+		if (cabs(z) > escape) {
 			return false;
 		}
 	}
 }
 
-bool tricorn(complex double c, int iterations, complex double arg) {
-	(void)arg;
+bool tricorn(complex double c, complex double a, double escape, int iters) {
+	(void)a;
 	complex double z = 0;
-	for (int i = 0; i < iterations; i++) {
+	for (int i = 0; i < iters; i++) {
 		complex double cz = conj(z);
 		z = cz * cz + c;
-		if (cabs(z) > 2) {
+		if (cabs(z) > escape) {
 			return false;
 		}
 	}
