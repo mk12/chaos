@@ -21,6 +21,7 @@ bool mandelbrot(complex double c, complex double a, double escape, int iters) {
 			return false;
 		}
 	}
+	return true;
 }
 
 bool tricorn(complex double c, complex double a, double escape, int iters) {
@@ -33,4 +34,5 @@ bool tricorn(complex double c, complex double a, double escape, int iters) {
 			return false;
 		}
 	}
+	return true;
 }

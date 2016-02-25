@@ -6,7 +6,10 @@
 #include "util.h"
 
 #include <complex.h>
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Looks up a fractal function by name. Returns NULL if it cannot be found.
 static FractalFn lookup_fractal(char name) {
@@ -41,16 +44,30 @@ int plot(const struct Parameters *params) {
 		return 1;
 	}
 
+	FILE *file = fopen(params->ofile, "w");
+	if (!file) {
+		printf_error("%s: %s", params->ofile, strerror(errno));
+		return 1;
+	}
+
+	fprintf(file, "P6 %d %d 255\n", params->width, params->height);
+
 	complex double c = params->a + params->b * I;
 	for (int y = 0; y < params->height; y++) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
 			if (in_fractal(z, c, params->escape, params->iterations)) {
-				// black
+				putc(0, file);
+				putc(0, file);
+				putc(0, file);
 			} else {
-				// white
+				putc(255, file);
+				putc(255, file);
+				putc(255, file);
 			}
 		}
 	}
+
+	fclose(file);
 	return 0;
 }

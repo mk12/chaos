@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 		.cy = 0,
 		.scale = 1,
 		.escape = 2,
-		.iterations = 1,
+		.iterations = 1000,
 		.width = 500,
 		.height = 500,
 		.ofile = "chaos.ppm"
