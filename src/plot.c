@@ -32,26 +32,30 @@ static complex double pixel_to_point(
 	double hh = params->height / 2.0;
 	double nx = (x + 0.5 - hw) / hw;
 	double ny = (y + 0.5 - hh) / hh;
-	double real = nx * params->scale;
-	double imag = -ny * params->scale;
+	double real = nx / params->scale + params->cx;
+	double imag = -ny / params->scale + params->cy;
 	return real + imag * I;
 }
 
 int plot(const struct Parameters *params) {
+	// Look up the fractal function.
 	FractalFn in_fractal = lookup_fractal(params->name);
 	if (!in_fractal) {
 		printf_error("%c: invalid fractal name", params->name);
 		return 1;
 	}
 
+	// Open the file for writing.
 	FILE *file = fopen(params->ofile, "w");
 	if (!file) {
 		printf_error("%s: %s", params->ofile, strerror(errno));
 		return 1;
 	}
 
+	// Write the PPM header.
 	fprintf(file, "P6 %d %d 255\n", params->width, params->height);
 
+	// Calculate and write the pixel values.
 	complex double c = params->a + params->b * I;
 	for (int y = 0; y < params->height; y++) {
 		for (int x = 0; x < params->width; x++) {
