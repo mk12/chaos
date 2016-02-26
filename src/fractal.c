@@ -14,12 +14,6 @@ double julia(complex double z, complex double c, double escape, int iters) {
 	return x / iters;
 }
 
-// Returns a smooth value on [0,1] for a Mandelbrot or Tricorn unbouded orbit
-// that reaches a complex value with modulus 'mod' on the nth iteration.
-static double mandel_smooth(double mod, int n) {
-	return n + 1 - log2(mod);
-}
-
 double mandelbrot(
 		complex double c, complex double unused, double escape, int iters) {
 	(void)unused;
@@ -28,7 +22,7 @@ double mandelbrot(
 		z = z * z + c;
 		double mod = cabs(z);
 		if (mod > escape) {
-			return mandel_smooth(mod, i);
+			return (i + 1 - log2(log(mod))) / iters;
 		}
 	}
 	return 0;
@@ -43,7 +37,7 @@ double tricorn(
 		z = cz * cz + c;
 		double mod = cabs(z);
 		if (mod > escape) {
-			return mandel_smooth(mod, i);
+			return (i + 1 - log2(log(mod))) / iters;
 		}
 	}
 	return 0;
