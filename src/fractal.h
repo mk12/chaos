@@ -6,19 +6,20 @@
 #include <complex.h>
 #include <stdbool.h>
 
-// A fractal function tests whether a point is in a fractal set, given the point
-// as a complex value, a complex constant (only used by Julia), the escape
-// threshold used for determining if an orbit is bounded, and an integer number
-// of iterations to perform.
-typedef bool (*FractalFn)(complex double, complex double, double, int);
+// A fractal function takes a complex 'z' and returns a smooth value on [0,1]. A
+// return value of 0 means 'z' is in the fractal set. The function also takes
+// additional parameters: a complex constant (only used by Julia), the escape
+// threshold used for dtermining if an orbit is bounded, and the number of
+// iterations to perform.
+typedef double (*FractalFn)(complex double, complex double, double, int);
 
-// Returns true if 'z' is in the Julia set for constant 'c'.
-bool julia(complex double z, complex double c, double escape, int iters);
+// Fractal function for the Julia set for a particular constant 'c'.
+double julia(complex double z, complex double c, double escape, int iters);
 
-// Returns true if 'z' is in the Mandelbrot set.
-bool mandelbrot(complex double c, complex double, double escape, int iters);
+// Fractal function for the Madelbrot set.
+bool mandelbrot(complex double z, complex double, double escape, int iters);
 
-// Returns true if 'z' is in the Tricorn set.
-bool tricorn(complex double c, complex double, double escape, int iters);
+// Fractal function for the Tricorn set (also called the Mandelbar set).
+bool tricorn(complex double z, complex double, double escape, int iters);
 
 #endif
