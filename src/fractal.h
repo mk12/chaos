@@ -17,9 +17,9 @@ typedef double (*FractalFn)(complex double, complex double, double, int);
 double julia(complex double z, complex double c, double escape, int iters);
 
 // Fractal function for the Madelbrot set.
-bool mandelbrot(complex double z, complex double, double escape, int iters);
+double mandelbrot(complex double z, complex double, double escape, int iters);
 
 // Fractal function for the Tricorn set (also called the Mandelbar set).
-bool tricorn(complex double z, complex double, double escape, int iters);
+double tricorn(complex double z, complex double, double escape, int iters);
 
 #endif

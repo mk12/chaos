@@ -2,7 +2,10 @@
 
 #include "fractal.h"
 
+#include <math.h>
+
 double julia(complex double z, complex double c, double escape, int iters) {
+	(void)escape;
 	double x = exp(-cabs(z));
 	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
@@ -17,7 +20,9 @@ static double mandel_smooth(double mod, int n) {
 	return n + 1 - log2(mod);
 }
 
-double mandelbrot(complex double c, complex double, double escape, int iters) {
+double mandelbrot(
+		complex double c, complex double unused, double escape, int iters) {
+	(void)unused;
 	complex double z = 0;
 	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
@@ -29,14 +34,16 @@ double mandelbrot(complex double c, complex double, double escape, int iters) {
 	return 0;
 }
 
-double tricorn(complex double c, complex double, double escape, int iters) {
+double tricorn(
+		complex double c, complex double unused, double escape, int iters) {
+	(void)unused;
 	complex double z = 0;
 	for (int i = 0; i < iters; i++) {
 		complex double cz = conj(z);
 		z = cz * cz + c;
 		double mod = cabs(z);
 		if (mod > escape) {
-			return mandel_smooth(mod);
+			return mandel_smooth(mod, i);
 		}
 	}
 	return 0;
