@@ -2,37 +2,42 @@
 
 #include "fractal.h"
 
-bool julia(complex double z, complex double c, double escape, int iters) {
+double julia(complex double z, complex double c, double escape, int iters) {
+	double x = exp(-cabs(z));
 	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
-		if (cabs(z) > escape) {
-			return false;
-		}
+		x += exp(-cabs(z));
 	}
-	return true;
+	return x / iters;
 }
 
-bool mandelbrot(complex double c, complex double a, double escape, int iters) {
-	(void)a;
+// Returns a smooth value on [0,1] for a Mandelbrot or Tricorn unbouded orbit
+// that reaches a complex value with modulus 'mod' on the nth iteration.
+static double mandel_smooth(double mod, int n) {
+	return n + 1 - log2(mod);
+}
+
+double mandelbrot(complex double c, complex double, double escape, int iters) {
 	complex double z = 0;
 	for (int i = 0; i < iters; i++) {
 		z = z * z + c;
-		if (cabs(z) > escape) {
-			return false;
+		double mod = cabs(z);
+		if (mod > escape) {
+			return mandel_smooth(mod, i);
 		}
 	}
-	return true;
+	return 0;
 }
 
-bool tricorn(complex double c, complex double a, double escape, int iters) {
-	(void)a;
+double tricorn(complex double c, complex double, double escape, int iters) {
 	complex double z = 0;
 	for (int i = 0; i < iters; i++) {
 		complex double cz = conj(z);
 		z = cz * cz + c;
-		if (cabs(z) > escape) {
-			return false;
+		double mod = cabs(z);
+		if (mod > escape) {
+			return mandel_smooth(mod);
 		}
 	}
-	return true;
+	return 0;
 }
