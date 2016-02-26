@@ -12,6 +12,7 @@ struct Parameters {
 	double escape;      // threshold for an unbounded orbit
 	int iterations;     // number of iterations
 	int width, height;  // image dimensions, in pixels
+	char color_scheme;  // name of the color scheme
 	const char *ofile;  // output filename
 };
 

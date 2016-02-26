@@ -2,6 +2,7 @@
 
 #include "plot.h"
 
+#include "color.h"
 #include "fractal.h"
 #include "util.h"
 
@@ -25,6 +26,16 @@ static FractalFn lookup_fractal(char name) {
 	}
 }
 
+// Looks up a color scheme function by name. Returns NULL if it cannot be found.
+static ColorFn lookup_color_scheme(char name) {
+	switch (name) {
+	case 'a':
+		return alpha;
+	default:
+		return NULL;
+	}
+}
+
 // Converts a pixel to a point for the viewport defined by the parameters.
 static complex double pixel_to_point(
 		int x, int y, const struct Parameters *params) {
@@ -39,9 +50,16 @@ static complex double pixel_to_point(
 
 int plot(const struct Parameters *params) {
 	// Look up the fractal function.
-	FractalFn in_fractal = lookup_fractal(params->name);
-	if (!in_fractal) {
+	FractalFn fractal_fn = lookup_fractal(params->name);
+	if (!fractal_fn) {
 		printf_error("%c: invalid fractal name", params->name);
+		return 1;
+	}
+
+	// Look up the color scheme function.
+	ColorFn color_fn = lookup_color_scheme(params->color_scheme);
+	if (!fractal_fn) {
+		printf_error("%c: invalid color scheme name", params->color_scheme);
 		return 1;
 	}
 
@@ -60,15 +78,8 @@ int plot(const struct Parameters *params) {
 	for (int y = 0; y < params->height; y++) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
-			if (in_fractal(z, c, params->escape, params->iterations)) {
-				putc(0, file);
-				putc(0, file);
-				putc(0, file);
-			} else {
-				putc(255, file);
-				putc(255, file);
-				putc(255, file);
-			}
+			double v = fractal_fn(z, c, params->escape, params->iterations);
+			color_fn(file, v);
 		}
 	}
 

@@ -9,7 +9,7 @@
 // The usage message for the program.
 static const char *usage_msg =
 	"[-n name] [-a A] [-b B] [-x centre_x] [-y centre_y] [-s scale] [-e escape]"
-	" [-i iterations] [-w width] [-h height] [-o file]";
+	" [-i iterations] [-w width] [-h height] [-c color_scheme] [-o file]";
 
 int main(int argc, char **argv) {
 	setup_util(argv[0], usage_msg);
@@ -26,6 +26,7 @@ int main(int argc, char **argv) {
 		.iterations = 1000,
 		.width = 500,
 		.height = 500,
+		.color_scheme = 'a',
 		.ofile = "chaos.ppm"
 	};
 
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "n:a:b:x:y:s:e:i:w:h:o:")) != -1) {
+	while ((c = getopt(argc, argv, "n:a:b:x:y:s:e:i:w:h:c:o:")) != -1) {
 		switch (c) {
 		case 'n':
 			params.name = *optarg;
@@ -94,6 +95,9 @@ int main(int argc, char **argv) {
 				printf_error("%s: height must be positive", optarg);
 				return 1;
 			}
+			break;
+		case 'c':
+			params.color_scheme = *optarg;
 			break;
 		case 'o':
 			params.ofile = optarg;
