@@ -14,9 +14,9 @@ static unsigned char srgb(double x) {
 	return (unsigned char)(x * 255 + 0.5);
 }
 
-void alpha(FILE *out, double v) {
+void alpha(unsigned char *out, double v) {
 	unsigned char g = srgb(v);
-	putc(g, out);
-	putc(g, out);
-	putc(g, out);
+	out[0] = g;
+	out[1] = g;
+	out[2] = g;
 }

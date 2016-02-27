@@ -5,11 +5,11 @@
 
 #include <stdio.h>
 
-// A color scheme function takes an output stream and a smooth value on [0,1].
-// It writes an RGB pixel (3 bytes) to the output stream.
-typedef void (*ColorFn)(FILE *, double);
+// A color scheme function takes an output location and a smooth value on [0,1].
+// It writes an RGB pixel (3 bytes) to the output location.
+typedef void (*ColorFn)(unsigned char *, double);
 
 // The alpha color scheme function.
-void alpha(FILE *out, double v);
+void alpha(unsigned char *out, double v);
 
 #endif

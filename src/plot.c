@@ -8,6 +8,7 @@
 
 #include <complex.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,6 +53,37 @@ static complex double pixel_to_point(
 	return real + imag * I;
 }
 
+// Writes a raster image to a PPM file, where 'raster' is an array of 'size'
+// bytes in row-major RGB format. Writes to the filename specified in the
+// parameters. Returns true on success; prints an error message and returns
+// false of failure.
+
+// Writes a PPM image to the output file specified in 'params'. Expects 'raster'
+// to be an array of bytes in row-major RGB format of correct size for the width
+// and height of the image. Returns true on success; prints an error message and
+// returns false on failure.
+static bool write_ppm(unsigned char *raster, const struct Parameters *params) {
+	FILE *file = fopen(params->ofile, "w");
+	if (!file) {
+		goto error;
+	}
+	if (fprintf(file, "P6 %d %d 255\n", params->width, params->height) < 0) {
+		fclose(file);
+		goto error;
+	}
+	size_t n_pixels = (size_t)(params->width * params->height);
+	if (fwrite(raster, 3, n_pixels, file) != n_pixels) {
+		fclose(file);
+		goto error;
+	}
+	fclose(file);
+	return true;
+
+error:
+	printf_error("%s: %s", params->ofile, strerror(errno));
+	return false;
+}
+
 int plot(const struct Parameters *params) {
 	// Look up the fractal function.
 	FractalFn fractal_fn = lookup_fractal(params->name);
@@ -67,15 +99,9 @@ int plot(const struct Parameters *params) {
 		return 1;
 	}
 
-	// Open the file for writing.
-	FILE *file = fopen(params->ofile, "w");
-	if (!file) {
-		printf_error("%s: %s", params->ofile, strerror(errno));
-		return 1;
-	}
-
-	// Write the PPM header.
-	fprintf(file, "P6 %d %d 255\n", params->width, params->height);
+	// Allocate the image buffer.
+	size_t bufsize = (size_t)(params->width * params->height * 3);
+	unsigned char *buf = malloc(bufsize);
 
 	// Calculate and write the pixel values.
 	complex double c = params->a + params->b * I;
@@ -83,10 +109,10 @@ int plot(const struct Parameters *params) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
 			double v = fractal_fn(z, c, params->escape, params->iterations);
-			color_fn(file, v);
+			color_fn(buf, v);
+			buf += 3;
 		}
 	}
 
-	fclose(file);
-	return 0;
+	return write_ppm(buf, params) ? 0 : 1;
 }
