@@ -53,16 +53,11 @@ static complex double pixel_to_point(
 	return real + imag * I;
 }
 
-// Writes a raster image to a PPM file, where 'raster' is an array of 'size'
-// bytes in row-major RGB format. Writes to the filename specified in the
-// parameters. Returns true on success; prints an error message and returns
-// false of failure.
-
 // Writes a PPM image to the output file specified in 'params'. Expects 'raster'
-// to be an array of bytes in row-major RGB format of correct size for the width
-// and height of the image. Returns true on success; prints an error message and
-// returns false on failure.
-static bool write_ppm(unsigned char *raster, const struct Parameters *params) {
+// to be an array of 'size' bytes in row-major RGB format. Returns true on
+// success; prints an error message and returns false on failure.
+static bool write_ppm(
+		unsigned char *raster, size_t size, const struct Parameters *params) {
 	FILE *file = fopen(params->ofile, "w");
 	if (!file) {
 		goto error;
@@ -71,8 +66,7 @@ static bool write_ppm(unsigned char *raster, const struct Parameters *params) {
 		fclose(file);
 		goto error;
 	}
-	size_t n_pixels = (size_t)(params->width * params->height);
-	if (fwrite(raster, 3, n_pixels, file) != n_pixels) {
+	if (fwrite(raster, 1, size, file) != size) {
 		fclose(file);
 		goto error;
 	}
@@ -85,34 +79,29 @@ error:
 }
 
 int plot(const struct Parameters *params) {
-	// Look up the fractal function.
 	FractalFn fractal_fn = lookup_fractal(params->name);
 	if (!fractal_fn) {
 		printf_error("%c: invalid fractal name", params->name);
 		return 1;
 	}
-
-	// Look up the color scheme function.
 	ColorFn color_fn = lookup_color_scheme(params->color_scheme);
 	if (!fractal_fn) {
 		printf_error("%c: invalid color scheme name", params->color_scheme);
 		return 1;
 	}
 
-	// Allocate the image buffer.
 	size_t bufsize = (size_t)(params->width * params->height * 3);
 	unsigned char *buf = malloc(bufsize);
+	unsigned char *pixel = buf;
 
-	// Calculate and write the pixel values.
 	complex double c = params->a + params->b * I;
 	for (int y = 0; y < params->height; y++) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
 			double v = fractal_fn(z, c, params->escape, params->iterations);
-			color_fn(buf, v);
-			buf += 3;
+			color_fn(pixel, v);
+			pixel += 3;
 		}
 	}
-
-	return write_ppm(buf, params) ? 0 : 1;
+	return write_ppm(buf, bufsize, params) ? 0 : 1;
 }
