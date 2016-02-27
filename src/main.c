@@ -13,7 +13,7 @@ static const char *usage_message =
 	"  Default\n"
 	"    chaos -n j -a 0 -b 0\n"
 	"          -x 0 -y 0 -s 1 -e 2 -i 1000\n"
-	"          -w 500 -h 500 -c a -o chaos.ppm\n"
+	"          -w 500 -h 500 -c a -j 1 -o chaos.ppm\n"
 	"\n"
 	"  Fractal\n"
 	"    -n  Fractal name: j/m/t for Julia/Mandelbrot/Tricorn\n"
@@ -31,6 +31,7 @@ static const char *usage_message =
 	"    -w  Width of the output image in pixels\n"
 	"    -h  Height of the output image in pixels\n"
 	"    -c  Color scheme: a or b\n"
+	"    -j  Number of jobs to run in parallel\n"
 	"    -o  Output filename\n"
 	"\n";
 
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
 		.width = 500,
 		.height = 500,
 		.color_scheme = 'a',
+		.jobs = 1,
 		.ofile = "chaos.ppm"
 	};
 
@@ -57,7 +59,7 @@ int main(int argc, char **argv) {
 	int c;
 	extern char *optarg;
 	extern int optind, optopt;
-	while ((c = getopt(argc, argv, "n:a:b:x:y:s:e:i:w:h:c:o:")) != -1) {
+	while ((c = getopt(argc, argv, "n:a:b:x:y:s:e:i:w:h:c:j:o:")) != -1) {
 		switch (c) {
 		case 'n':
 			params.name = *optarg;
@@ -121,6 +123,15 @@ int main(int argc, char **argv) {
 			break;
 		case 'c':
 			params.color_scheme = *optarg;
+			break;
+		case 'j':
+			if (!parse_int(&params.jobs, optarg)) {
+				return 1;
+			}
+			if (params.jobs <= 0) {
+				printf_error("%s: jobs must be positive", optarg);
+				return 1;
+			}
 			break;
 		case 'o':
 			params.ofile = optarg;

@@ -13,6 +13,7 @@ struct Parameters {
 	int iterations;     // number of iterations
 	int width, height;  // image dimensions, in pixels
 	char color_scheme;  // name of the color scheme
+	int jobs;           // number of parallel jobs to run
 	const char *ofile;  // output filename
 };
 
