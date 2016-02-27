@@ -13,6 +13,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+// A Task specifies a set of rows to plot. Performing a Task consists of writing
+// 'height' rows to the raster buffer, beginning at row index 'y', using the
+// fractal function 'compute' and color scheme function 'write'.
+struct Task {
+	FractalFn compute;
+	ColorFn write;
+	int y, height;
+	unsigned char *raster;
+	const struct Parameters *params;
+};
+
 // Looks up a fractal function by name. Returns NULL if it cannot be found.
 static FractalFn lookup_fractal(char name) {
 	switch (name) {
@@ -78,6 +89,25 @@ error:
 	return false;
 }
 
+// Performs the Task 'arg'. Always returns NULL.
+static void *perform_task(void *arg) {
+	const struct Task *task = (struct Task *)arg;
+	const struct Parameters *params = task->params;
+
+	int end_y = task->y + task->height;
+	unsigned char *out = task->raster + task->y * params->width * 3;
+	complex double c = params->a + params->b * I;
+	for (int y = task->y; y < end_y; y++) {
+		for (int x = 0; x < params->width; x++) {
+			complex double z = pixel_to_point(x, y, params);
+			double v = task->compute(z, c, params->escape, params->iterations);
+			task->write(out, v);
+			out += 3;
+		}
+	}
+	return NULL;
+}
+
 int plot(const struct Parameters *params) {
 	FractalFn fractal_fn = lookup_fractal(params->name);
 	if (!fractal_fn) {
@@ -90,18 +120,16 @@ int plot(const struct Parameters *params) {
 		return 1;
 	}
 
-	size_t bufsize = (size_t)(params->width * params->height * 3);
-	unsigned char *buf = malloc(bufsize);
-	unsigned char *pixel = buf;
-
-	complex double c = params->a + params->b * I;
-	for (int y = 0; y < params->height; y++) {
-		for (int x = 0; x < params->width; x++) {
-			complex double z = pixel_to_point(x, y, params);
-			double v = fractal_fn(z, c, params->escape, params->iterations);
-			color_fn(pixel, v);
-			pixel += 3;
-		}
-	}
-	return write_ppm(buf, bufsize, params) ? 0 : 1;
+	size_t size = (size_t)(params->width * params->height * 3);
+	unsigned char *raster = malloc(size);
+	struct Task task = {
+		.compute = fractal_fn,
+		.write = color_fn,
+		.y = 0,
+		.height = params->height,
+		.raster = raster,
+		.params = params
+	};
+	perform_task(&task);
+	return write_ppm(raster, size, params) ? 0 : 1;
 }
