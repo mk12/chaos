@@ -16,10 +16,13 @@
 static FractalFn lookup_fractal(char name) {
 	switch (name) {
 	case 'j':
+	case 'J':
 		return julia;
 	case 'm':
+	case 'M':
 		return mandelbrot;
 	case 't':
+	case 'T':
 		return tricorn;
 	default:
 		return NULL;
@@ -30,6 +33,7 @@ static FractalFn lookup_fractal(char name) {
 static ColorFn lookup_color_scheme(char name) {
 	switch (name) {
 	case 'a':
+	case 'A':
 		return alpha;
 	default:
 		return NULL;
