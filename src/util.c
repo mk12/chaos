@@ -8,16 +8,8 @@
 // The name of the program.
 static const char *program_name = NULL;
 
-// The part of the usage message that lists the arguments.
-static const char *usage_msg = NULL;
-
-void setup_util(const char *p, const char *u) {
-	program_name = p;
-	usage_msg = u;
-}
-
-void print_usage(FILE *out) {
-	fprintf(out, "usage: %s %s\n", program_name, usage_msg);
+void setup_util(const char *the_program_name) {
+	program_name = the_program_name;
 }
 
 void printf_error(const char *format, ...)

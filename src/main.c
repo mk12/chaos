@@ -7,12 +7,35 @@
 #include <unistd.h>
 
 // The usage message for the program.
-static const char *usage_msg =
-	"[-n name] [-a A] [-b B] [-x centre_x] [-y centre_y] [-s scale] [-e escape]"
-	" [-i iterations] [-w width] [-h height] [-c color_scheme] [-o file]";
+static const char *usage_message =
+	"usage: chaos [options]\n"
+	"\n"
+	"  Default\n"
+	"    chaos -n j -a 0 -b 0\n"
+	"          -x 0 -y 0 -s 1 -e 2 -i 1000\n"
+	"          -w 500 -h 500 -c a -o chaos.ppm\n"
+	"\n"
+	"  Fractal\n"
+	"    -n  Fractal name: j/m/t for Julia/Mandelbrot/Tricorn\n"
+	"    -a  (Julia only) Real part of the constant c\n"
+	"    -b  (Julia only) Imaginary part of the constant c\n"
+	"\n"
+	"  Settings\n"
+	"    -x  X-component of the centre of the viewport\n"
+	"    -y  Y-component of the centre of the viewport\n"
+	"    -s  Scale factor of the viewport\n"
+	"    -e  Escape threshold for determing if an orbit is unbounded\n"
+	"    -i  Integer number of iterations to perform\n"
+	"\n"
+	"  Output\n"
+	"    -w  Width of the output image in pixels\n"
+	"    -h  Height of the output image in pixels\n"
+	"    -c  Color scheme: a or b\n"
+	"    -o  Output filename\n"
+	"\n";
 
 int main(int argc, char **argv) {
-	setup_util(argv[0], usage_msg);
+	setup_util(argv[0]);
 
 	// Initialize the default parameters.
 	struct Parameters params = {
@@ -103,13 +126,13 @@ int main(int argc, char **argv) {
 			params.ofile = optarg;
 			break;
 		case '?':
-			print_usage(stderr);
+			fputs(usage_message, stderr);
 			return 1;
 		}
 	}
 	// Make sure all arguments were processed.
 	if (optind != argc) {
-		print_usage(stderr);
+		fputs(usage_message, stderr);
 		return 1;
 	}
 

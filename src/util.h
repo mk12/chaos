@@ -7,10 +7,7 @@
 #include <stdio.h>
 
 // Performs necessary setup. Must be called once when the program starts.
-void setup_util(const char *program_name, const char *usage_msg);
-
-// Prints the usage message to the given output stream.
-void print_usage(FILE *out);
+void setup_util(const char *program_name);
 
 // Prints an error message to stderr with printf syntax.
 void printf_error(const char *format, ...);
