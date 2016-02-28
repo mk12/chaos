@@ -8,6 +8,7 @@
 
 #include <complex.h>
 #include <errno.h>
+#include <math.h>
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -103,7 +104,7 @@ static void *perform_task(void *arg) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
 			double v = task->compute(z, c, params->escape, params->iterations);
-			task->write(out, v);
+			task->write(out, pow(v, params->power));
 			out += 3;
 		}
 	}
