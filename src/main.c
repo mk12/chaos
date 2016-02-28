@@ -4,6 +4,7 @@
 #include "util.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 // Maximum values for some parameters.
@@ -42,6 +43,10 @@ static const char *usage_message =
 
 int main(int argc, char **argv) {
 	setup_util(argv[0]);
+	if (argc == 2 && strcmp(argv[1], "--help") == 0) {
+		fputs(usage_message, stdout);
+		return 0;
+	}
 
 	// Initialize the default parameters.
 	struct Parameters params = {
