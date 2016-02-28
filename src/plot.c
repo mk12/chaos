@@ -8,6 +8,7 @@
 
 #include <complex.h>
 #include <errno.h>
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,6 +109,32 @@ static void *perform_task(void *arg) {
 	return NULL;
 }
 
+// Breaks 'task' into 'n' subtasks and performs them in parallel. Returns true
+// on success; prints an error message and returns false on failure. Waits for
+// all subtask threads to terminate before returning.
+static bool perform_in_parallel(const struct Task *task, int n) {
+	pthread_t threads[n];
+	int height = task->params->height / n;
+	for (int i = 0; i < n; i++) {
+		struct Task subtask = *task;
+		subtask.y = i * height;
+		subtask.height = height;
+		int err = pthread_create(&threads[i], NULL, perform_task, &subtask);
+		if (err != 0) {
+			printf_error("error creating thread #%d: %s", i, strerror(err));
+			return false;
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		int err = pthread_join(threads[i], NULL);
+		if (err != 0) {
+			printf_error("error joining thread #%d: %s", i, strerror(err));
+			return false;
+		}
+	}
+	return true;
+}
+
 int plot(const struct Parameters *params) {
 	FractalFn fractal_fn = lookup_fractal(params->name);
 	if (!fractal_fn) {
@@ -130,6 +157,16 @@ int plot(const struct Parameters *params) {
 		.raster = raster,
 		.params = params
 	};
-	perform_task(&task);
-	return write_ppm(raster, size, params) ? 0 : 1;
+	if (params->jobs == 1) {
+		perform_task(&task);
+	} else {
+		if (!perform_in_parallel(&task, params->jobs)) {
+			free(raster);
+			return 1;
+		}
+	}
+
+	bool success = write_ppm(raster, size, params);
+	free(raster);
+	return success ? 0 : 1;
 }
