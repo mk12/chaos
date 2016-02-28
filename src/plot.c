@@ -58,8 +58,9 @@ static complex double pixel_to_point(
 		int x, int y, const struct Parameters *params) {
 	double hw = params->width / 2.0;
 	double hh = params->height / 2.0;
-	double nx = (x + 0.5 - hw) / hw;
-	double ny = (y + 0.5 - hh) / hh;
+	double divisor = hh;
+	double nx = (x + 0.5 - hw) / divisor;
+	double ny = (y + 0.5 - hh) / divisor;
 	double real = nx / params->scale + params->cx;
 	double imag = -ny / params->scale + params->cy;
 	return real + imag * I;
