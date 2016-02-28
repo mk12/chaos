@@ -116,10 +116,12 @@ static bool perform_in_parallel(const struct Task *task, int n) {
 	pthread_t threads[n];
 	struct Task subtasks[n];
 	int height = task->params->height / n;
+	int extra = task->params->height % n;
+
 	for (int i = 0; i < n; i++) {
 		subtasks[i] = *task;
 		subtasks[i].y = i * height;
-		subtasks[i].height = height;
+		subtasks[i].height = i == n - 1 ? height + extra : height;
 		int err = pthread_create(&threads[i], NULL, perform_task, &subtasks[i]);
 		if (err != 0) {
 			printf_error("error creating thread #%d: %s", i, strerror(err));
