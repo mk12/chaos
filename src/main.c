@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 		.iterations = 1000,
 		.width = 500,
 		.height = 500,
-		.color_scheme = 'a',
+		.color_scheme = 'g',
 		.jobs = 1,
 		.ofile = "chaos.ppm"
 	};

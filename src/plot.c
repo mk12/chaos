@@ -146,7 +146,7 @@ int plot(const struct Parameters *params) {
 		return 1;
 	}
 	ColorFn color_fn = lookup_color_scheme(params->color_scheme);
-	if (!fractal_fn) {
+	if (!color_fn) {
 		printf_error("%c: invalid color scheme name", params->color_scheme);
 		return 1;
 	}
