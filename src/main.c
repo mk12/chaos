@@ -6,6 +6,11 @@
 #include <stdio.h>
 #include <unistd.h>
 
+// Maximum values for some parameters.
+#define MAX_WIDTH 10000
+#define MAX_HEIGHT 10000
+#define MAX_JOBS 64
+
 // The usage message for the program.
 static const char *usage_message =
 	"usage: chaos [options]\n"
@@ -111,6 +116,11 @@ int main(int argc, char **argv) {
 				printf_error("%s: width must be positive", optarg);
 				return 1;
 			}
+			if (params.width > MAX_WIDTH) {
+				printf_error("%s: width too large (maximum %d)",
+					optarg, MAX_WIDTH);
+				return 1;
+			}
 			break;
 		case 'h':
 			if (!parse_int(&params.height, optarg)) {
@@ -118,6 +128,11 @@ int main(int argc, char **argv) {
 			}
 			if (params.height <= 0) {
 				printf_error("%s: height must be positive", optarg);
+				return 1;
+			}
+			if (params.width > MAX_HEIGHT) {
+				printf_error("%s: height too large (maximum %d)",
+					optarg, MAX_HEIGHT);
 				return 1;
 			}
 			break;
@@ -130,6 +145,10 @@ int main(int argc, char **argv) {
 			}
 			if (params.jobs <= 0) {
 				printf_error("%s: jobs must be positive", optarg);
+				return 1;
+			}
+			if (params.width > MAX_JOBS) {
+				printf_error("%s: too many jobs (maximum %d)", optarg, MAX_JOBS);
 				return 1;
 			}
 			break;
