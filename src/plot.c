@@ -114,12 +114,13 @@ static void *perform_task(void *arg) {
 // all subtask threads to terminate before returning.
 static bool perform_in_parallel(const struct Task *task, int n) {
 	pthread_t threads[n];
+	struct Task subtasks[n];
 	int height = task->params->height / n;
 	for (int i = 0; i < n; i++) {
-		struct Task subtask = *task;
-		subtask.y = i * height;
-		subtask.height = height;
-		int err = pthread_create(&threads[i], NULL, perform_task, &subtask);
+		subtasks[i] = *task;
+		subtasks[i].y = i * height;
+		subtasks[i].height = height;
+		int err = pthread_create(&threads[i], NULL, perform_task, &subtasks[i]);
 		if (err != 0) {
 			printf_error("error creating thread #%d: %s", i, strerror(err));
 			return false;
