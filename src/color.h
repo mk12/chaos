@@ -12,4 +12,7 @@ typedef void (*ColorFn)(unsigned char *, double);
 // A grayscale color scheme.
 void grayscale(unsigned char *out, double v);
 
+// A bright, rainbow color scheme.
+void rainbow(unsigned char *out, double v);
+
 #endif

@@ -49,6 +49,9 @@ static ColorFn lookup_color_scheme(char name) {
 	case 'g':
 	case 'G':
 		return grayscale;
+	case 'r':
+	case 'R':
+		return rainbow;
 	default:
 		return NULL;
 	}

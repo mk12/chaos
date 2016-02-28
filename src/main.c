@@ -36,7 +36,7 @@ static const char *usage_message =
 	"  Output\n"
 	"    -w  Width of the output image in pixels\n"
 	"    -h  Height of the output image in pixels\n"
-	"    -c  Color scheme: g for grayscale\n"
+	"    -c  Color scheme: g/r for grayscale/rainbow\n"
 	"    -p  Power for the smooth value\n"
 	"    -j  Number of jobs to run in parallel\n"
 	"    -o  Output filename\n"
