@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
 				printf_error("%s: height must be positive", optarg);
 				return 1;
 			}
-			if (params.width > MAX_HEIGHT) {
+			if (params.height > MAX_HEIGHT) {
 				printf_error("%s: height too large (maximum %d)",
 					optarg, MAX_HEIGHT);
 				return 1;
@@ -147,8 +147,9 @@ int main(int argc, char **argv) {
 				printf_error("%s: jobs must be positive", optarg);
 				return 1;
 			}
-			if (params.width > MAX_JOBS) {
-				printf_error("%s: too many jobs (maximum %d)", optarg, MAX_JOBS);
+			if (params.jobs > MAX_JOBS) {
+				printf_error("%s: too many jobs (maximum %d)",
+					optarg, MAX_JOBS);
 				return 1;
 			}
 			break;
