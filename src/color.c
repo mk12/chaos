@@ -14,7 +14,7 @@ static unsigned char srgb(double x) {
 	return (unsigned char)(x * 255 + 0.5);
 }
 
-void alpha(unsigned char *out, double v) {
+void grayscale(unsigned char *out, double v) {
 	unsigned char g = srgb(v);
 	out[0] = g;
 	out[1] = g;

@@ -19,7 +19,7 @@ static const char *usage_message =
 	"  Default\n"
 	"    chaos -n j -a 0 -b 0\n"
 	"          -x 0 -y 0 -s 1 -e 2 -i 1000\n"
-	"          -w 500 -h 500 -c a -j 1 -o chaos.ppm\n"
+	"          -w 500 -h 500 -c g -j 1 -o chaos.ppm\n"
 	"\n"
 	"  Fractal\n"
 	"    -n  Fractal name: j/m/t for Julia/Mandelbrot/Tricorn\n"
@@ -36,7 +36,7 @@ static const char *usage_message =
 	"  Output\n"
 	"    -w  Width of the output image in pixels\n"
 	"    -h  Height of the output image in pixels\n"
-	"    -c  Color scheme: a or b\n"
+	"    -c  Color scheme: g for grayscale\n"
 	"    -j  Number of jobs to run in parallel\n"
 	"    -o  Output filename\n"
 	"\n";

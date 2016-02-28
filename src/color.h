@@ -9,7 +9,7 @@
 // It writes an RGB pixel (3 bytes) to the output location.
 typedef void (*ColorFn)(unsigned char *, double);
 
-// The alpha color scheme function.
-void alpha(unsigned char *out, double v);
+// A grayscale color scheme.
+void grayscale(unsigned char *out, double v);
 
 #endif

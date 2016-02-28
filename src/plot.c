@@ -45,9 +45,9 @@ static FractalFn lookup_fractal(char name) {
 // Looks up a color scheme function by name. Returns NULL if it cannot be found.
 static ColorFn lookup_color_scheme(char name) {
 	switch (name) {
-	case 'a':
-	case 'A':
-		return alpha;
+	case 'g':
+	case 'G':
+		return grayscale;
 	default:
 		return NULL;
 	}
