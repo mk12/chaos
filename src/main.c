@@ -13,7 +13,7 @@
 #define MAX_JOBS 64
 
 // The usage message for the program.
-static const char *usage_message =
+static const char *const usage_message =
 	"usage: chaos [options]\n"
 	"\n"
 	"  Default\n"
