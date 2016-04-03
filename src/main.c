@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 			}
 			if (params.width > MAX_WIDTH) {
 				printf_error("%s: width too large (maximum %d)",
-					optarg, MAX_WIDTH);
+						optarg, MAX_WIDTH);
 				return 1;
 			}
 			break;
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
 			}
 			if (params.height > MAX_HEIGHT) {
 				printf_error("%s: height too large (maximum %d)",
-					optarg, MAX_HEIGHT);
+						optarg, MAX_HEIGHT);
 				return 1;
 			}
 			break;
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
 			}
 			if (params.jobs > MAX_JOBS) {
 				printf_error("%s: too many jobs (maximum %d)",
-					optarg, MAX_JOBS);
+						optarg, MAX_JOBS);
 				return 1;
 			}
 			break;
