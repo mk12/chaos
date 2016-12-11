@@ -67,7 +67,7 @@ static complex double pixel_to_point(
 	double ny = (y + 0.5 - hh) / divisor;
 	double real = nx / params->scale + params->cx;
 	double imag = -ny / params->scale + params->cy;
-	return real + imag * I;
+	return CMPLX(real, imag);
 }
 
 // Writes a PPM image to the output file specified in 'params'. Expects 'raster'
@@ -102,7 +102,7 @@ static void *perform_task(void *arg) {
 
 	int end_y = task->y + task->height;
 	unsigned char *out = task->raster + task->y * params->width * 3;
-	complex double c = params->a + params->b * I;
+	complex double c = CMPLX(params->a,  params->b);
 	for (int y = task->y; y < end_y; y++) {
 		for (int x = 0; x < params->width; x++) {
 			complex double z = pixel_to_point(x, y, params);
