@@ -15,7 +15,7 @@ Just run `make`.
 
 ## Usage
 
-Run `out/chaos --help` to see the instructions:
+Run `bin/chaos --help` to see the instructions:
 
 ```
 usage: chaos [options]

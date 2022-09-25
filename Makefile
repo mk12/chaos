@@ -18,9 +18,9 @@ LDFLAGS := $(if $(DEBUG),,-O3)
 LDLIBS := -lpthread
 
 src := $(wildcard src/*.c)
-obj := $(src:src/%.c=out/obj/%.o)
+obj := $(src:src/%.c=obj/%.o)
 dep := $(obj:.o=.d)
-bin := out/chaos
+bin := bin/chaos
 
 .SUFFIXES:
 
@@ -31,15 +31,15 @@ help:
 	@:
 
 clean:
-	rm -rf out
+	rm -rf obj bin
 
-out out/obj:
-	mkdir -p $@
+obj bin:
+	mkdir $@
 
-$(obj): out/obj/%.o: src/%.c | out/obj
+$(obj): obj/%.o: src/%.c | obj
 	$(CC) $(CFLAGS) $(DEPFLAGS) -c -o $@ $<
 
-$(bin): $(obj) | out
+$(bin): $(obj) | bin
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 -include $(dep)
